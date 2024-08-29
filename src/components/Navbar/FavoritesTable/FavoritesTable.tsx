@@ -1,18 +1,46 @@
 "use client";
+import { IPerson } from '@/models';
+import { removeFavorite } from '@/redux/states';
 import { IAppStore } from '@/redux/store';
+import { Delete } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { GridColDef, GridRenderCellParams, DataGrid } from '@mui/x-data-grid';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const pageSize = 5;
 
 const FavoritesTable: React.FC  = () => {
 	/** STATES */
-  
-    const stateFavorites = useSelector((store: IAppStore) => store.favorites);
+	const dispatch = useDispatch();
+
+	const stateFavorites = useSelector((store: IAppStore) => store.favorites);
+
+	const handleClick = (person: IPerson) => {
+		dispatch(removeFavorite(person));
+	}
   
   
 	const columns: GridColDef[] = [
+		{
+			field: "actions",
+			headerName: "",
+			type: "actions",
+			sortable: false,
+			width: 50,
+			renderCell: (params: GridRenderCellParams) => (
+				<IconButton
+				size="large"
+				aria-label="favorites"
+	
+				aria-haspopup="true"
+				onClick={() => handleClick(params.row)}
+				color="inherit"
+			  >
+				<Delete />
+			  </IconButton>
+			),
+		  },
 	  {
 		field: "name",
 		headerName: "Name",
